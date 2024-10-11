@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>1637b569-e781-45fb-84bf-ac2928f4d51d</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AspireGreenfield.ApiService\AspireGreenfield.ApiService.csproj" />
+    <ProjectReference Include="..\AspireGreenfield.Web\AspireGreenfield.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.1" />
+    <PackageReference Include="Aspire.Hosting.Redis" Version="8.2.1" />
+  </ItemGroup>
+
+</Project>

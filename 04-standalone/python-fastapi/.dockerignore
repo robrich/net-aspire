@@ -1,0 +1,15 @@
+# downloaded files
+__pycache__
+# built files
+# user-specific files
+.venv
+# temp files
+.DS_Store
+# secrets
+.env
+# non-production files
+Dockerfile
+.dockerignore
+.gitignore
+.git
+start.*

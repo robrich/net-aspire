@@ -1,0 +1,74 @@
+version: '3'
+
+services:
+
+  dotnet-api:
+    build:
+      context: AspireStandalone.ApiService
+      dockerfile: Dockerfile
+    ports:
+    - 8080:8080
+    container_name: dotnet-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__Redis: 'redis:6379'
+      ConnectionStrings__Postgres: 'Host=postgres;Port=5432;Username=postgres;Password=Pa55word.;Database=weatherforecast'
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire:18889
+      OTEL_SERVICE_NAME: apiservice
+    networks:
+    - standalone
+
+  loadtest:
+    build:
+      context: AspireStandalone.LoadTest
+      dockerfile: Dockerfile
+    container_name: loadtest
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ApiServiceUrl: http://dotnet-api:8080
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire:18889
+      OTEL_SERVICE_NAME: consoleloadtest
+    networks:
+    - standalone
+    links:
+    - dotnet-api
+
+  vue:
+    build:
+      context: vue-app
+      dockerfile: Dockerfile
+      args:
+        VITE_OTEL_EXPORTER_OTLP_TRACES_URL: http://aspire:18890/v1/traces
+    ports:
+    - 8082:80
+    container_name: vue-app
+    #environment:
+      # they're hard-coded in nginx.conf and src/tracing.ts
+      #ApiServiceUrl: http://dotnet-api:8080
+      #OTEL_SERVICE_NAME: vue-app
+    networks:
+    - standalone
+    links:
+    - dotnet-api
+
+  python-fastapi:
+    build:
+      context: python-fastapi
+      dockerfile: Dockerfile
+    ports:
+    - 8001:8001
+    container_name: python-fastapi
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire:18889
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_METRICS_EXEMPLAR_FILTER: trace_based
+      OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED: 'true'
+      OTEL_RESOURCE_ATTRIBUTES: service.instance.id=python-fastapi
+      OTEL_SERVICE_NAME: python-fastapi
+      OTEL_TRACES_SAMPLER: always_on
+    networks:
+    - standalone
+
+networks:
+  standalone:

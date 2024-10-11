@@ -1,0 +1,50 @@
+﻿@page "/weatherstations"
+@attribute [StreamRendering(true)]
+
+@inject WeatherApiClient WeatherApi
+
+<PageTitle>Weather Stations</PageTitle>
+
+<h1>Weather Stations</h1>
+
+@if (stations == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Country</th>
+                <td>Timezone</td>
+                <td>Location</td>
+                <td>Elevation (meters)</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var station in stations)
+            {
+                <tr>
+                    <td>@station.Id</td>
+                    <td>@station.Name</td>
+                    <td>@station.Country</td>
+                    <td>@station.Timezone</td>
+                    <td>@station.Latitude x @station.Longitude</td>
+                    <td>@station.Elevation</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<WeatherStation>? stations;
+
+    protected override async Task OnInitializedAsync()
+    {
+        stations = await WeatherApi.GetWeatherStations();
+    }
+}

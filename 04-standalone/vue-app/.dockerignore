@@ -1,0 +1,16 @@
+# downloaded files
+node_modules
+# built files
+dist
+# user-specific files
+.vscode
+# temp files
+package-lock.json
+*.tsbuildinfo
+# secrets
+.env
+# non-production files
+Dockerfile
+.dockerignore
+.gitignore
+.git

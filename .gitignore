@@ -1,0 +1,23 @@
+# downloaded content
+node_modules
+# built content
+bin
+obj
+dist
+# user-specific files
+.vs
+.vscode
+.DS_Store
+*.suo
+.venv
+# temp files
+package-lock.json
+.DS_Store
+pg-data
+redis-data
+*.log
+*-debug.log*
+*.tsbuildinfo
+__pycache__
+# secrets
+# specifically not ignoring .env so the sample is complete

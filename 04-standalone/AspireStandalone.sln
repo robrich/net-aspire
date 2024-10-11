@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspireStandalone.ApiService", "AspireStandalone.ApiService\AspireStandalone.ApiService.csproj", "{783378EE-77D6-4C05-A4B0-AA0D44E963F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireStandalone.LoadTest", "AspireStandalone.LoadTest\AspireStandalone.LoadTest.csproj", "{9E69607B-3280-41FA-B80C-C273FFABF7F3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{783378EE-77D6-4C05-A4B0-AA0D44E963F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{783378EE-77D6-4C05-A4B0-AA0D44E963F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{783378EE-77D6-4C05-A4B0-AA0D44E963F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{783378EE-77D6-4C05-A4B0-AA0D44E963F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E69607B-3280-41FA-B80C-C273FFABF7F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E69607B-3280-41FA-B80C-C273FFABF7F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E69607B-3280-41FA-B80C-C273FFABF7F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E69607B-3280-41FA-B80C-C273FFABF7F3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AA2136B3-C4F5-43E7-BF0B-6A896E630327}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+
+  aspire:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard
+    ports:
+    - "8000:8000" # web: http://localhost:8000
+    - "4317:18889" # gRPC collector
+    - "4138:18890" # http collector
+    container_name: aspire
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:8000
+      DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: true
+      DASHBOARD__OTLP__CORS__ALLOWEDORIGINS: '*'
+    networks:
+    - standalone
+
+  postgres:
+    image: postgres:alpine
+    ports:
+    - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Pa55word.
+      POSTGRES_DB: weatherforecast
+    volumes:
+    - ./postgres-init:/docker-entrypoint-initdb.d/:ro
+    - ./pg-data:/var/lib/postgresql/data
+    container_name: postgres
+    networks:
+    - standalone
+
+  pgweb:
+    image: sosedoff/pgweb
+    ports:
+    - "8081:8081"
+    container_name: pgweb
+    links:
+    - postgres
+    networks:
+    - standalone
+
+  redis:
+    image: redis:alpine
+    ports:
+    - 6379:6379
+    container_name: redis
+    volumes:
+    - ./redis-data:/data
+    networks:
+    - standalone
+
+networks:
+  standalone:
