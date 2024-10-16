@@ -9,10 +9,11 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
-        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21096",
+        // FRAGILE: dashboard prefers the gRPC endpoint over the http endpoint
+        //"DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21096",
         "DOTNET_DASHBOARD_OTLP_HTTP_ENDPOINT_URL": "https://localhost:21097",
-        "DASHBOARD__OTLP__CORS__ALLOWEDORIGINS": "*",
         "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22242",
+        "DASHBOARD__OTLP__CORS__ALLOWEDORIGINS": "*",
         "ASPIRE_ALLOW_UNSECURED_TRANSPORT": "true"
       }
     },
@@ -24,7 +25,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
-        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:19114",
+        // FRAGILE: dashboard prefers the gRPC endpoint over the http endpoint
+        //"DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:19114",
         "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20068",
         "DOTNET_DASHBOARD_OTLP_HTTP_ENDPOINT_URL": "http://localhost:20069",
         "DASHBOARD__OTLP__CORS__ALLOWEDORIGINS": "*",

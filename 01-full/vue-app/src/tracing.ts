@@ -1,35 +1,86 @@
+import { ConsoleSpanExporter, SimpleSpanProcessor } from '@opentelemetry/sdk-trace-base';
 import { WebTracerProvider } from '@opentelemetry/sdk-trace-web';
-import { SimpleSpanProcessor } from '@opentelemetry/sdk-trace-base';
+import { Resource } from '@opentelemetry/resources';
+import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
 import { ZoneContextManager } from '@opentelemetry/context-zone';
 import { registerInstrumentations } from '@opentelemetry/instrumentation';
 import { getWebAutoInstrumentations } from '@opentelemetry/auto-instrumentations-web';
-import { Resource } from '@opentelemetry/resources';
-import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
+import { DocumentLoadInstrumentation } from '@opentelemetry/instrumentation-document-load';
+import { FetchInstrumentation } from '@opentelemetry/instrumentation-fetch';
+import { UserInteractionInstrumentation } from '@opentelemetry/instrumentation-user-interaction';
+import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-proto';
 
 
-const url = (import.meta.env.VITE_OTEL_EXPORTER_OTLP_ENDPOINT || 'https://localhost:21097')+'/v1/traces';
+export interface InitializeTelemetryData {
+  otlpUrl: string;
+  headers: string;
+  resourceAttributes: string;
+  serviceName: string;
+}
 
-export const provider = new WebTracerProvider({
-  resource: Resource.default().merge(new Resource({
-    'service.name': 'vue-app'
-  }))
-});
+let provider: WebTracerProvider;
 
-const exporterOptions = { url };
+export function initializeTelemetry(args: InitializeTelemetryData) {
+  if (!args?.otlpUrl) {
+    return; // OpenTelemetry is not enabled
+  }
 
-const traceExporter = new OTLPTraceExporter(exporterOptions);
+  console.log(`Initializing OpenTelemetry: ${JSON.stringify(args, null, 2)}`);
 
-provider.addSpanProcessor(new SimpleSpanProcessor(traceExporter));
+  const otlpOptions = {
+    url: `${args.otlpUrl}/v1/traces`,
+    headers: parseDelimitedValues(args?.headers),
+  };
 
-provider.register({
-  contextManager: new ZoneContextManager()
-});
+  const attributes: Record<string, string> = parseDelimitedValues(args.resourceAttributes);
+  if (args.serviceName) {
+    attributes[ATTR_SERVICE_NAME] = args.serviceName;
+  }
 
-// Registering instrumentations
-registerInstrumentations({
-  instrumentations: [
-    getWebAutoInstrumentations()
-  ]
-});
+  provider = new WebTracerProvider({
+    resource: new Resource(attributes)
+  });
+  //provider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter())); // too noisy?
+  provider.addSpanProcessor(new SimpleSpanProcessor(new OTLPTraceExporter(otlpOptions)));
 
-console.log('OpenTelemetry sending data to', url);
+  provider.register({
+    contextManager: new ZoneContextManager()
+  });
+
+  registerInstrumentations({
+    instrumentations: [
+      getWebAutoInstrumentations(), // load documentLoad, fetch, userInteraction, xmlHttpRequest
+      /*
+      new DocumentLoadInstrumentation(), // too noisy?
+      new FetchInstrumentation({
+        propagateTraceHeaderCorsUrls: [new RegExp(`\\/api\\/*`)] // if cors
+      }),
+      new UserInteractionInstrumentation({ // limit to a and button clicks that submit
+        eventNames: ['click', 'submit'],
+        shouldPreventSpanCreation: (_, element) => {
+          return (
+            element.tagName === 'A' ||
+            (element.tagName === 'BUTTON' && element.getAttribute('type') === 'submit')
+          );
+        }
+      })
+      */
+    ]
+  });
+
+  return provider;
+}
+
+function parseDelimitedValues(s: string): Record<string, string> {
+  const headers = s.split(','); // Split by comma, ASSUME: commas in keys or values are encoded
+  const o: Record<string, string> = {};
+
+  headers.forEach((header) => {
+    const [key, value] = header.split('='); // Split by equal sign
+    if (key && value) {
+      o[key.trim()] = value.trim(); // Add to the object, trimming spaces
+    }
+  });
+
+  return o;
+}

@@ -7,12 +7,13 @@ services:
     ports:
     - "8000:8000" # web: http://localhost:8000
     - "4317:18889" # gRPC collector
-    - "4138:18890" # http collector
+    - "4318:18890" # http collector
     container_name: aspire
     environment:
       ASPNETCORE_URLS: http://0.0.0.0:8000
       DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: true
       DASHBOARD__OTLP__CORS__ALLOWEDORIGINS: '*'
+      DASHBOARD__OTLP__CORS__ALLOWEDHEADERS: '*'
     networks:
     - standalone
 
