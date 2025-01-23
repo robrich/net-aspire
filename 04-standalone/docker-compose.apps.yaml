@@ -39,7 +39,11 @@ services:
       context: vue-app
       dockerfile: Dockerfile
       args:
-        VITE_OTEL_EXPORTER_OTLP_TRACES_URL: http://aspire:18890/v1/traces
+        # from the browser's perspective:
+        VITE_OTEL_EXPORTER_OTLP_ENDPOINT: http://localhost:4318
+        VITE_OTEL_EXPORTER_OTLP_HEADERS: ''
+        VITE_OTEL_RESOURCE_ATTRIBUTES: 'service.instance.id=vue-app'
+        VITE_OTEL_SERVICE_NAME: vue-app
     ports:
     - 8082:80
     container_name: vue-app

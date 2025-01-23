@@ -5,9 +5,9 @@ services:
   aspire:
     image: mcr.microsoft.com/dotnet/aspire-dashboard
     ports:
-    - "8000:8000" # web: http://localhost:8000
-    - "4317:18889" # gRPC collector
-    - "4318:18890" # http collector
+    - 8000:8000 # web: http://localhost:8000
+    - 4317:18889 # gRPC collector
+    - 4318:18890 # http collector
     container_name: aspire
     environment:
       ASPNETCORE_URLS: http://0.0.0.0:8000
@@ -20,7 +20,7 @@ services:
   postgres:
     image: postgres:alpine
     ports:
-    - "5432:5432"
+    - 5432:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: Pa55word.
@@ -35,7 +35,7 @@ services:
   pgweb:
     image: sosedoff/pgweb
     ports:
-    - "8081:8081"
+    - 8081:8081
     container_name: pgweb
     links:
     - postgres
@@ -51,6 +51,17 @@ services:
     - ./redis-data:/data
     networks:
     - standalone
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+    - REDIS_HOSTS=local:redis:6379
+    ports:
+    - 8011:8081
+    networks:
+    - standalone
+    links:
+    - redis
 
 networks:
   standalone:

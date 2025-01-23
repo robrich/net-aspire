@@ -13,7 +13,8 @@ var postgres = builder.AddPostgres("postgres", userName: sqlUsername, password: 
 var postgresdb = postgres.AddDatabase("postgresdb", dbName);
 
 var cache = builder.AddRedis("cache")
-    .WithImageTag("alpine");
+    .WithImageTag("alpine")
+    .WithRedisCommander();
 
 var apiService = builder.AddProject<Projects.AspireFull_ApiService>("apiservice")
     .WithReference(cache)
