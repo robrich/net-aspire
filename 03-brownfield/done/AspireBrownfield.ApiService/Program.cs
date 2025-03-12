@@ -5,7 +5,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 // Add services to the container.
-
 builder.Services.AddProblemDetails();
 
 // local debugging: "localhost:6379"
@@ -15,27 +14,21 @@ builder.Services.AddStackExchangeRedisOutputCache(options => {
 	options.Configuration = redisConnStr;
 });
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-//
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-app.MapDefaultEndpoints();
-
 // Configure the HTTP request pipeline.
-
 app.UseExceptionHandler();
-app.UseOutputCache();
 
 if (app.Environment.IsDevelopment())
 {
-	app.UseSwagger();
+    app.MapOpenApi();
 	app.UseSwaggerUI();
 }
 
-List<string> summaries = [ "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" ];
+string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
 
 app.MapGet("/api/weatherforecast", [OutputCache(Duration = 3/*sec*/)] () =>
 {
@@ -44,11 +37,14 @@ app.MapGet("/api/weatherforecast", [OutputCache(Duration = 3/*sec*/)] () =>
         (
             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
             Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Count)]
+            summaries[Random.Shared.Next(summaries.Length)]
         ))
         .ToArray();
     return forecast;
-});
+})
+.WithName("GetWeatherForecast");
+
+app.MapDefaultEndpoints();
 
 app.Run();
 

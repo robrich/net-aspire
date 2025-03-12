@@ -1,5 +1,5 @@
 # build "server" image
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine as build
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine as build
 
 WORKDIR /src
 
@@ -13,7 +13,7 @@ RUN dotnet publish -c Release -o /dist AspireStandalone.LoadTest.csproj
 
 
 # production runtime "server" image
-FROM mcr.microsoft.com/dotnet/runtime:8.0-alpine
+FROM mcr.microsoft.com/dotnet/runtime:9.0-alpine
 
 ENV ASPNETCORE_ENVIRONMENT=Production
 ENV ApiServiceUrl=""

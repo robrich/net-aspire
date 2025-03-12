@@ -5,32 +5,25 @@ import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
 import { ZoneContextManager } from '@opentelemetry/context-zone';
 import { registerInstrumentations } from '@opentelemetry/instrumentation';
 import { getWebAutoInstrumentations } from '@opentelemetry/auto-instrumentations-web';
-/*
 import { DocumentLoadInstrumentation } from '@opentelemetry/instrumentation-document-load';
 import { FetchInstrumentation } from '@opentelemetry/instrumentation-fetch';
 import { UserInteractionInstrumentation } from '@opentelemetry/instrumentation-user-interaction';
-*/
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-proto';
+import type { InitializeTelemetryData } from './types/opentelemetry';
+import parseDelimitedValues from './utils/parse-delimited-values';
 
-
-export interface InitializeTelemetryData {
-  otlpUrl: string;
-  headers: string;
-  resourceAttributes: string;
-  serviceName: string;
-}
 
 let provider: WebTracerProvider;
 
 export function initializeTelemetry(args: InitializeTelemetryData) {
-  if (!args?.otlpUrl) {
+  if (!args?.otlpEndpoint) {
     return; // OpenTelemetry is not enabled
   }
 
-  console.log(`Initializing OpenTelemetry: ${JSON.stringify(args, null, 2)}`);
+  console.log(`Initializing OpenTelemetry Tracing: ${JSON.stringify(args, null, 2)}`);
 
   const otlpOptions = {
-    url: `${args.otlpUrl}/v1/traces`,
+    url: `${args.otlpEndpoint}/v1/traces`,
     headers: parseDelimitedValues(args?.headers),
   };
 
@@ -58,21 +51,4 @@ export function initializeTelemetry(args: InitializeTelemetryData) {
   });
 
   return provider;
-}
-
-function parseDelimitedValues(s: string): Record<string, string> {
-  const o: Record<string, string> = {};
-  if (!s) {
-    return o;
-  }
-  const headers = s.split(','); // Split by comma, ASSUME: commas in keys or values are encoded
-
-  headers.forEach((header) => {
-    const [key, value] = header.split('='); // Split by equal sign
-    if (key && value) {
-      o[key.trim()] = value.trim(); // Add to the object, trimming spaces
-    }
-  });
-
-  return o;
 }

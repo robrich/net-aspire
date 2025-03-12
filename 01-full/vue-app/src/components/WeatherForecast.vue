@@ -22,7 +22,7 @@ fetchWeatherForecasts();
 <template>
   <h2>Weather Forecasts</h2>
   <button @click="fetchWeatherForecasts">Refresh Forecasts</button>
-  <div>Server caches for 5 seconds</div>
+  <div>Server caches for 3 seconds</div>
   <table class="table">
     <thead>
       <tr>

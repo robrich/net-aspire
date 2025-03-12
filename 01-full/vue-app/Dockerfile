@@ -22,6 +22,8 @@ FROM nginx:alpine
 # https://nginx.org/packages/mainline/alpine/v3.20/main/x86_64/
 
 RUN apk add --no-cache libstdc++
+RUN apk add --no-cache grpc-cpp
+RUN apk add --no-cache abseil-cpp-log-initialize
 
 ARG ARCH="x86_64"
 
@@ -39,6 +41,8 @@ RUN ALPINE_VERSION=$(cat /etc/alpine-release | cut -d. -f1-2 | sed 's/^/v/') && 
 
 RUN echo "load_module modules/ngx_otel_module.so;" | cat - /etc/nginx/nginx.conf > /tmp/nginx.conf; mv /tmp/nginx.conf /etc/nginx/nginx.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /src/dist /usr/share/nginx/html
 
-# nginx:alpine has a CMD already
+WORKDIR /usr/share/nginx/html
+COPY --from=build /src/dist .
+
+# nginx already has `CMD [...]`

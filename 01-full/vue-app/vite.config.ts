@@ -5,7 +5,6 @@ import vue from '@vitejs/plugin-vue';
 
 const serverUrl = process.env.services__apiservice__https__0 || process.env.services__apiservice__http__0;
 
-
 process.env.VITE_OTEL_EXPORTER_OTLP_ENDPOINT = process.env.OTEL_EXPORTER_OTLP_ENDPOINT;
 process.env.VITE_OTEL_EXPORTER_OTLP_HEADERS = process.env.OTEL_EXPORTER_OTLP_HEADERS;
 process.env.VITE_OTEL_RESOURCE_ATTRIBUTES = process.env.OTEL_RESOURCE_ATTRIBUTES;

@@ -6,6 +6,8 @@ import vue from '@vitejs/plugin-vue';
 const serverUrl = process.env.SERVER_URL || 'https://localhost:7364';
 console.log('proxying /api/* to server:', serverUrl);
 
+// VITE_OTEL_* env vars set in .env
+
 export default defineConfig({
   plugins: [
     vue(),

@@ -18,16 +18,21 @@ var cache = builder.AddRedis("cache")
 
 var apiService = builder.AddProject<Projects.AspireFull_ApiService>("apiservice")
     .WithReference(cache)
+    .WaitFor(cache)
     .WithReference(postgresdb)
+    .WaitFor(postgresdb)
     .WithExternalHttpEndpoints();
 
 builder.AddProject<Projects.AspireFull_Web>("webfrontend")
     .WithReference(cache)
+    .WaitFor(cache)
+    .WaitFor(apiService)
     .WithReference(apiService)
     .WithExternalHttpEndpoints();
 
 var vue = builder.AddNpmApp("vue", "../vue-app", "dev")
     .WithReference(apiService)
+    .WaitFor(apiService)
     .WithHttpEndpoint(env: "PORT" /*, isProxied: true*/)
     .WithExternalHttpEndpoints()
     .PublishAsDockerFile();

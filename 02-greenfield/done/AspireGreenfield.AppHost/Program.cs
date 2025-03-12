@@ -8,6 +8,8 @@ var apiService = builder.AddProject<Projects.AspireGreenfield_ApiService>("apise
 builder.AddProject<Projects.AspireGreenfield_Web>("webfrontend")
     .WithExternalHttpEndpoints()
     .WithReference(cache)
-    .WithReference(apiService);
+    .WaitFor(cache)
+    .WithReference(apiService)
+    .WaitFor(apiService);
 
 builder.Build().Run();
