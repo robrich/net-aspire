@@ -1,5 +1,6 @@
 import { logs, SeverityNumber } from '@opentelemetry/api-logs';
 import { LoggerProvider, SimpleLogRecordProcessor, ConsoleLogRecordExporter } from '@opentelemetry/sdk-logs';
+import { Resource } from '@opentelemetry/resources';
 import { OTLPLogExporter } from '@opentelemetry/exporter-logs-otlp-http';
 import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
 import type { InitializeTelemetryData } from './types/opentelemetry';
@@ -23,9 +24,14 @@ export function initializeLogging(args: InitializeTelemetryData) {
     attributes[ATTR_SERVICE_NAME] = args.serviceName;
   }
 
-  const loggerProvider = new LoggerProvider();
+  const resource = new Resource(attributes);
+
+  const loggerProvider = new LoggerProvider({resource});
   loggerProvider.addLogRecordProcessor(
     new SimpleLogRecordProcessor(new OTLPLogExporter(otlpOptions))
+  );
+  loggerProvider.addLogRecordProcessor(
+    new SimpleLogRecordProcessor(new ConsoleLogRecordExporter()) // too noisy?
   );
 
   // Setup global singleton

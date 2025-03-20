@@ -28,6 +28,8 @@ builder.Services.AddHttpClient<WeatherApiClient>(client =>
 
 var app = builder.Build();
 
+app.MapDefaultEndpoints();
+
 // Configure the HTTP request pipeline.
 
 if (!app.Environment.IsDevelopment())
@@ -47,7 +49,5 @@ app.MapStaticAssets();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
-
-app.MapDefaultEndpoints();
 
 app.Run();

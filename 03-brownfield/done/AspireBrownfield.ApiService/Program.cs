@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 // Add services to the container.
+
 builder.Services.AddProblemDetails();
 
 // local debugging: "localhost:6379"
@@ -18,6 +19,8 @@ builder.Services.AddStackExchangeRedisOutputCache(options => {
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
@@ -43,8 +46,6 @@ app.MapGet("/api/weatherforecast", [OutputCache(Duration = 3/*sec*/)] () =>
     return forecast;
 })
 .WithName("GetWeatherForecast");
-
-app.MapDefaultEndpoints();
 
 app.Run();
 

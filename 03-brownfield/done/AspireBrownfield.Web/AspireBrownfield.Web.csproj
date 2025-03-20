@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AspireBrownfield.ServiceDefaults\AspireBrownfield.ServiceDefaults.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.OutputCaching.StackExchangeRedis" Version="9.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OutputCaching.StackExchangeRedis" Version="8.0.8" />
+    <ProjectReference Include="..\AspireBrownfield.ServiceDefaults\AspireBrownfield.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>
