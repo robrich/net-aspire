@@ -29,11 +29,11 @@ h1:focus {
 }
 
 .invalid {
-    outline: 1px solid #e50650;
+    outline: 1px solid #e51440;
 }
 
 .validation-message {
-    color: #e50650;
+    color: #e51440;
 }
 
 .blazor-error-boundary {
